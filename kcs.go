@@ -182,6 +182,31 @@ var Instance = CheatSheet{
 						},
 					},
 				},
+				"create": {
+					Command: "kubectl create deployment nginx --image=nginx ",
+					Description: "start a single instance of nginx",
+				},
+				"explain": {
+					Command: "kubectl explain pods,svc",
+					Description: "get the documentation for pod and svc manifests",
+				},
+			},
+		},
+		"get": {
+			Name: "Viewing, Finding Resources",
+			Commands: map[string]CommandDescriptor{
+				"services": {
+					Command: "kubectl get services",
+					Description: "list all services in the namespace",
+				},
+				"pods-all": {
+					Command: "kubectl get pods --all-namespaces",
+					Description: "list all pods in all namespaces",
+				},
+				"services-sort": {
+					Command: "kubectl get services --sort-by=.metadata.name",
+					Description: "list Services Sorted by Name",
+				},
 			},
 		},
 	},
