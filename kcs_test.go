@@ -1,3 +1,7 @@
 package kcs
 
-//func Test
+import "testing"
+
+func TestCheatSheetPrint(t *testing.T) {
+	Instance.Print("", "")
+}
