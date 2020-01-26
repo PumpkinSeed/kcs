@@ -2,7 +2,7 @@ package kcs
 
 import (
 	"github.com/fatih/color"
-	"golang.org/x/crypto/ssh/terminal"
+	"sort"
 )
 
 var (
@@ -23,22 +23,36 @@ type CheatSheet struct {
 	Categories map[string]Category
 }
 
-func (c *CheatSheet) Print(category, command string) {
-	width, _, _ := terminal.GetSize(0)
-	_, _ = categoryColor.Println(charMultiplier(width, "="))
+func (c CheatSheet) Sort() []Category {
+	var keys = make([]string, len(c.Categories))
+	var i = 0
+	for key := range c.Categories {
+		keys[i] = key
+		i++
+	}
 
-	var categories = c.Categories
+	sort.Strings(keys)
+	var categories []Category
+	for _, key := range keys {
+		categories = append(categories, c.Categories[key])
+	}
+	return categories
+}
+
+func (c CheatSheet) Print(category, command string) {
+	var innerC = c
 	if category != "" {
 		if pickedCategory, ok := c.Categories[category]; ok {
-			categories = make(map[string]Category)
-			categories[category] = pickedCategory
+			innerC = CheatSheet{Categories: make(map[string]Category)}
+			innerC.Categories[category] = pickedCategory
 		}
 	}
+	categories := innerC.Sort()
 
 	var counter = 0
 	for _, singleCategory := range categories {
 		counter++
-		singleCategory.Print(len(categories)==counter)
+		singleCategory.Print(counter == 1)
 	}
 }
 
@@ -48,23 +62,42 @@ type Category struct {
 	Commands map[string]CommandDescriptor
 }
 
-func (c *Category) Print(last bool) {
-	//_, _ = categoryHiColor.Println(charMultiplier(len(c.Name), "-"))
+func (c Category) Sort() []CommandDescriptor {
+	var keys = make([]string, len(c.Commands))
+	var i = 0
+	for key := range c.Commands {
+		keys[i] = key
+		i++
+	}
+
+	sort.Strings(keys)
+	var commands []CommandDescriptor
+	for _, key := range keys {
+		commands = append(commands, c.Commands[key])
+	}
+	return commands
+}
+
+func (c Category) Print(first bool) {
+	c.header(first)
+
+	sorted := c.Sort()
+	for _, cd := range sorted {
+		cd.Print()
+	}
+}
+
+func (c Category) header(first bool) {
+	if !first {
+		_, _ = categoryColor.Print("\n\n")
+	}
+	_, _ = categoryColor.Println(charMultiplier(len(c.Name)+2, "="))
 	_, _ = categoryHiColor.Println(c.Name + " |")
 	_, _ = categoryColor.Println(charMultiplier(len(c.Name)+2, "="))
-	if verbose {
+	if verbose && len(c.Description) > 0 {
 		_, _ = categoryColor.Println(c.Description)
 	}
 	_, _ = categoryColor.Print("\n")
-	for _, cd := range c.Commands { // @TODO alphabetic order
-		cd.Print()
-	}
-	if !last {
-		width, _, _ := terminal.GetSize(0)
-		_, _ = categoryColor.Print("\n")
-		_, _ = categoryColor.Println(charMultiplier(width, "="))
-		//_, _ = categoryColor.Print("\n")
-	}
 }
 
 type CommandDescriptor struct {
