@@ -6,7 +6,7 @@ import (
 )
 
 var (
-	verbose = true
+	verbose = false
 	categoryColor = color.New(color.FgCyan)
 	categoryHiColor = color.New(color.FgHiCyan)
 	commandColor = color.New(color.FgMagenta)
@@ -24,6 +24,9 @@ type CheatSheet struct {
 }
 
 func (c *CheatSheet) Print(category, command string) {
+	width, _, _ := terminal.GetSize(0)
+	_, _ = categoryColor.Println(charMultiplier(width, "="))
+
 	var categories = c.Categories
 	if category != "" {
 		if pickedCategory, ok := c.Categories[category]; ok {
@@ -47,8 +50,8 @@ type Category struct {
 
 func (c *Category) Print(last bool) {
 	//_, _ = categoryHiColor.Println(charMultiplier(len(c.Name), "-"))
-	_, _ = categoryHiColor.Println(c.Name)
-	_, _ = categoryColor.Println(charMultiplier(len(c.Name), "="))
+	_, _ = categoryHiColor.Println(c.Name + " |")
+	_, _ = categoryColor.Println(charMultiplier(len(c.Name)+2, "="))
 	if verbose {
 		_, _ = categoryColor.Println(c.Description)
 	}
@@ -428,6 +431,148 @@ var Instance = CheatSheet{
 				"pattern": {
 					Command: `kubectl get pods  -n mynamespace --no-headers=true | awk '/pattern1|pattern2/{print $1}' | xargs  kubectl delete -n mynamespace pod`,
 					Description: `delete all pods matching the awk pattern1 or pattern2`,
+				},
+			},
+		},
+		"logs": {
+			Name: "Interacting with running Pods",
+			Commands: map[string]CommandDescriptor{
+				"pod": {
+					Command: "kubectl logs my-pod",
+					Description: "dump pod logs (stdout)",
+				},
+				"label": {
+					Command: "kubectl logs -l name=myLabel",
+					Description: "dump pod logs, with label name=myLabel (stdout)",
+				},
+				"prevoius": {
+					Command: "kubectl logs my-pod --previous",
+					Description: "dump pod logs (stdout) for a previous instantiation of a container",
+				},
+				"container": {
+					Command: "kubectl logs my-pod -c my-container",
+					Description: "dump pod container logs (stdout, multi-container case)",
+				},
+				"label-container": {
+					Command: "kubectl logs -l name=myLabel -c my-container ",
+					Description: "dump pod logs, with label name=myLabel (stdout)",
+				},
+				"container-prevoius": {
+					Command: "kubectl logs my-pod -c my-container --previous",
+					Description: "dump pod container logs (stdout, multi-container case) for a previous instantiation of a container",
+				},
+				"file": {
+					Command: "kubectl logs -f my-pod",
+					Description: "stream pod logs (stdout)",
+				},
+				"file-container": {
+					Command: "kubectl logs -f my-pod -c my-container",
+					Description: "stream pod container logs (stdout, multi-container case)",
+				},
+				"file-label": {
+					Command: "kubectl logs -f -l name=myLabel --all-containers",
+					Description: "stream all pods logs with label name=myLabel (stdout)",
+				},
+				"run": {
+					Command: "kubectl run -i --tty busybox --image=busybox -- sh",
+					Description: "run pod as interactive shell",
+				},
+				"run-namespace": {
+					Command: "kubectl run nginx --image=nginx --restart=Never -n mynamespace",
+					Description: "run pod nginx in a specific namespace",
+				},
+				"run-file": {
+					Command: "kubectl run nginx --image=nginx --restart=Never --dry-run -o yaml > pod.yaml",
+					Description: "run pod nginx and write its spec into a file called pod.yaml",
+				},
+				"attach": {
+					Command: "kubectl attach my-pod -i",
+					Description: "attach to Running Container",
+				},
+				"port-forward": {
+					Command: "kubectl port-forward my-pod 5000:6000",
+					Description: "listen on port 5000 on the local machine and forward to port 6000 on my-pod",
+				},
+				"exec": {
+					Command: "kubectl exec my-pod -- ls",
+					Description: "run command in existing pod (1 container case)",
+				},
+				"exec-multiple": {
+					Command: "kubectl exec my-pod -c my-container -- ls",
+					Description: "run command in existing pod (multi-container case)",
+				},
+				"top": {
+					Command: "kubectl top pod POD_NAME --containers",
+					Description: "show metrics for a given pod and its containers",
+				},
+			},
+		},
+		"master-api": {
+			Name: "Interacting with Nodes and Cluster",
+			Commands: map[string]CommandDescriptor{
+				"cordon": {
+					Command: "kubectl cordon my-node",
+					Description: "mark my-node as unschedulable",
+				},
+				"drain": {
+					Command: "kubectl drain my-node ",
+					Description: "drain my-node in preparation for maintenance",
+				},
+				"uncordon": {
+					Command: "kubectl uncordon my-node",
+					Description: "mark my-node as schedulable",
+				},
+				"top": {
+					Command: "kubectl top node my-node",
+					Description: "show metrics for a given node",
+				},
+				"cluster-info": {
+					Command: "kubectl cluster-info",
+					Args: []ArgumentDescriptor{
+						{
+							Argument: "dump",
+							Description: "dump current cluster state to stdout",
+						},
+						{
+							Argument: "dump --output-directory=/path/to/cluster-state",
+							Description: "dump current cluster state to /path/to/cluster-state",
+						},
+					},
+					Description: "display addresses of the master and services",
+				},
+				"taint": {
+					Command: "kubectl taint nodes foo dedicated=special-user:NoSchedule",
+					Description: "if a taint with that key and effect already exists, its value is replaced as specified",
+				},
+				"api-resources": {
+					Command: "kubectl api-resources",
+					Args: []ArgumentDescriptor{
+						{
+							Argument: "--namespaced=true",
+							Description: "all namespaced resources",
+						},
+						{
+							Argument: "--namespaced=false",
+							Description: "all non-namespaced resources",
+						},
+						{
+							Argument: "-o name",
+							Description: "all resources with simple output (just the resource name)",
+						},
+						{
+							Argument: "-o wide",
+							Description: `all resources with expanded (aka "wide") output`,
+						},
+						{
+							Argument: "--verbs=list,get",
+							Description: `all resources that support the "list" and "get" request verbs`,
+						},
+						{
+							Argument: "--api-group=extensions",
+							Description: `all resources in the "extensions" API group`,
+						},
+					},
+					Description: "list all supported resource types along with their shortnames, API group, whether they are namespaced, and Kind",
 				},
 			},
 		},
