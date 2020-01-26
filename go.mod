@@ -13,6 +13,6 @@ require (
 	github.com/golang/protobuf v1.3.2 // indirect
 	github.com/rs/xid v1.2.1
 	github.com/steveyen/gtreap v0.0.0-20150807155958-0abe01ef9be2 // indirect
-	github.com/urfave/cli/v2 v2.1.1 // indirect
-	golang.org/x/crypto v0.0.0-20200117160349-530e935923ad
+	github.com/urfave/cli/v2 v2.1.1
+	golang.org/x/crypto v0.0.0-20200117160349-530e935923ad // indirect
 )

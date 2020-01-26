@@ -11,6 +11,18 @@ import (
 
 const idxIDDelimiter = "::"
 
+func PrintSearchResult(sr  map[string]map[string]struct{}) {
+	for categoryID, command := range sr {
+		for commandID := range command {
+			if category, ok := Data.Categories[categoryID]; ok {
+				if commandRes, ok := category.Commands[commandID]; ok {
+					commandRes.Print()
+				}
+			}
+		}
+	}
+}
+
 func Search(q string) map[string]map[string]struct{} {
 	idx := createIdx()
 

@@ -1,22 +1,39 @@
-# kubectl-cheatsheet
+# kcs - kubectl Cheatsheet CLI
 
-### Config
+Command-line tool collects set of example usages of kubectl
 
-- `k config view`
-- `k config get-contexts`
-- `k config current-context`
-- `k config use-context NAMEOFCONTEXT`
+### Features
 
-### Apply
+- Searchable
+- Easy to read
+- Verbose mode for description
 
-- `k apply -f file.yaml`
-- `k apply -f dir/`
-- `k apply -f https://domain.com/file.yaml`
-- `k create deployment nginx --image=nginx`
+### Installation
 
-### Viewing, Finding Resources
+```
+go install github.com/PumpkinSeed/kcs
+```
 
-- `k get services`
-- `k get pods --all-namespaces`
-- `k get pods -o wide`
+### Usage
+
+```
+$ kcs help
+NAME:
+   kcs - Searchable kubectl cheatsheet CLI tool
+
+COMMANDS:
+   help, h  Shows a list of commands or help for one command
+
+GLOBAL OPTIONS:
+   --verbose, -v             Set verbose mode (default: false)
+   --search value, -s value  Set search query
+   --category value          Set a certain category
+   --command value           Set a certain command
+   --help, -h                show help (default: false)
+```
+
+**Usage of search**
+
+![Usage of search](assets/render1580079413671.gif)
+
 

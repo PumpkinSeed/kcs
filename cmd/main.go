@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"os"
 
@@ -40,7 +39,8 @@ func main() {
 				kcs.SetVerbose(true)
 			}
 			if q := c.String("search"); q != "" {
-				fmt.Println(q)
+				kcs.PrintSearchResult(kcs.Search(q))
+				return nil
 			}
 			kcs.Data.Print(c.String("category"), c.String("command"))
 			return nil

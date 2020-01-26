@@ -1,17 +1,18 @@
 package kcs
 
 import (
-	"github.com/fatih/color"
 	"sort"
+
+	"github.com/fatih/color"
 )
 
 var (
-	verbose = false
-	categoryColor = color.New(color.FgCyan)
+	verbose         = false
+	categoryColor   = color.New(color.FgCyan)
 	categoryHiColor = color.New(color.FgHiCyan)
-	commandColor = color.New(color.FgMagenta)
-	commandHiColor = color.New(color.FgHiMagenta)
-	argumentColor = color.New(color.FgYellow)
+	commandColor    = color.New(color.FgMagenta)
+	commandHiColor  = color.New(color.FgHiMagenta)
+	argumentColor   = color.New(color.FgYellow)
 	argumentHiColor = color.New(color.FgHiYellow)
 )
 
@@ -57,9 +58,9 @@ func (c CheatSheet) Print(category, command string) {
 }
 
 type Category struct {
-	Name string
+	Name        string
 	Description string
-	Commands map[string]CommandDescriptor
+	Commands    map[string]CommandDescriptor
 }
 
 func (c Category) Sort() []CommandDescriptor {
@@ -101,8 +102,8 @@ func (c Category) header(first bool) {
 }
 
 type CommandDescriptor struct {
-	Command string
-	Args []ArgumentDescriptor
+	Command     string
+	Args        []ArgumentDescriptor
 	Description string
 }
 
@@ -113,12 +114,12 @@ func (cd *CommandDescriptor) Print() {
 	}
 	_, _ = commandColor.Print("\n")
 	for _, argument := range cd.Args {
-		argument.Print(len(cd.Command)+3)
+		argument.Print(len(cd.Command) + 3)
 	}
 }
 
 type ArgumentDescriptor struct {
-	Argument string
+	Argument    string
 	Description string
 }
 
@@ -133,6 +134,3 @@ func (ad *ArgumentDescriptor) Print(tabsize int) {
 	}
 	_, _ = argumentColor.Print("\n")
 }
-
-
-
