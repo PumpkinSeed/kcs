@@ -53,7 +53,7 @@ func (c CheatSheet) Print(category, command string) {
 	var counter = 0
 	for _, singleCategory := range categories {
 		counter++
-		singleCategory.Print(counter == 1)
+		singleCategory.Print(command, counter == 1)
 	}
 }
 
@@ -79,10 +79,22 @@ func (c Category) Sort() []CommandDescriptor {
 	return commands
 }
 
-func (c Category) Print(first bool) {
+func (c Category) Print(command string, first bool) {
 	c.header(first)
 
-	sorted := c.Sort()
+	var innerC = c
+	if command != "" {
+		if pickedCommand, ok := c.Commands[command]; ok {
+			innerC = Category{
+				Name:        c.Name,
+				Description: c.Description,
+				Commands:    make(map[string]CommandDescriptor),
+			}
+			innerC.Commands[command] = pickedCommand
+		}
+	}
+
+	sorted := innerC.Sort()
 	for _, cd := range sorted {
 		cd.Print()
 	}
