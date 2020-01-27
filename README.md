@@ -32,6 +32,10 @@ GLOBAL OPTIONS:
    --help, -h                show help (default: false)
 ```
 
+**Usage**
+
+![Usage](assets/usage.gif)
+
 **Usage of search**
 
 ![Search Usage](assets/search-usage.gif)
