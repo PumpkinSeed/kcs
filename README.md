@@ -34,6 +34,6 @@ GLOBAL OPTIONS:
 
 **Usage of search**
 
-![Usage of search](assets/render1580079413671.gif)
+[![asciicast](https://asciinema.org/a/vyfAoLb6NYRjORQ4DtHjIQZ6t.svg)](https://asciinema.org/a/vyfAoLb6NYRjORQ4DtHjIQZ6t)
 
 
